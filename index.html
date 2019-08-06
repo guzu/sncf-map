@@ -1,0 +1,92 @@
+<html>
+<head>
+    <link rel="stylesheet"
+          href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.css" />
+        <style type="text/css">
+        #corner {
+          position:absolute;bottom:0px;right:0px;z-index:10000px;
+          font-family: Arial;
+          font-size: 10px;
+          border-color: #444;
+          text-align: right;
+          width: 60em;
+        }
+
+        #info {
+          border-top-left-radius: 4px;
+          background-color: rgba(200, 200, 200, 0.8);
+          font-size: 14px;
+          padding: 3px;
+
+          //font-size: 14px;
+          //padding: 0px;
+          //margin: 0px;
+          //font-weight: normal;
+        }
+
+        #moreinfo {
+            display: none;
+            font-size: 16px;
+            text-align: left;
+            margin: 0.5em;
+        }
+        #moreinfo td {
+            vertical-align: top;
+        }
+
+        #info:hover #moreinfo {
+            display: block;
+        }
+
+        p {
+            word-wrap: break-word;
+        }
+
+        .leaflet-container img {
+          image-rendering: optimizeSpeed;
+        } /* thanks chrismorgan */
+    </style>
+</head>
+<body style='background-color:#FFF;padding:0;margin:0;'>
+    <div id="map" style="height: 100%"></div>
+    <div id='corner'>
+      <div id='info' valign="bottom">
+        <table id='moreinfo'>
+          <tr>
+            <td><img src="img/fr.png" height="11px">
+            <td>
+              Cette carte est utile pour planifier des voyages a velo en France. Malheuresuement la version d'origine en PDF est difficlement consultable sur un PC standard. 
+            </td>
+          <tr>
+            <td><img src="img/en.png" height="11px">
+            <td>
+              This map is very useful to plan bicycle trip over France. Unfortunatly original PDF map is hardly usable on a standard PC.
+        </table>
+        <table>
+          <tr>
+            <td><img src="img/fr.png" height="11px">
+            <td>Version web du PDF de la <a href="https://www.sncf-reseau.com/fr/carte/carte-reseau-ferre-en-france">carte des reseaux ferres de France</a> de la SNCF
+          </tr>
+          <tr>
+            <td><img src="img/en.png" height="11px">
+            <td>Web version of <a href="https://www.sncf-reseau.com/fr/carte/carte-reseau-ferre-en-france">France railway map</a> PDF provided by SNCF
+        </table>
+        <div width="100%" align="right">Visualization created by <a href="http://www.guzu.net">guzu</a> using <a href='http://leafletjs.com'>Leaflet</a> and <a href="https://imagemagick.org/">ImageMagick</a></div>
+      </div>
+    </div>
+
+    <script src="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.js"></script>
+
+    <script>
+        var map = L.map('map').setView([0, 0], 3);
+        L.tileLayer('map-201908/{z}/{x}/{y}.png', {
+            minZoom: 1,
+            maxZoom: 6,
+            noWrap: true,
+            tms: false,
+            attributionControl: false
+        }).addTo(map);
+    </script>
+</body>
+</html>
+
