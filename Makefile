@@ -1,22 +1,18 @@
 SHELL=bash
 
+ZOOM_MAX=6
+DIR=map-201908
+
 all: genmaps | gentiles
 
-genmaps:
-	./genmaps.sh
+png/zoom-%.png:
+	./genmap.sh $(subst png/zoom-,,$(subst .png,,$(@))) $(@)
 
+MAPS=$(foreach var,$(shell seq 1 $(ZOOM_MAX)),png/zoom-$(var).png)
+genmaps: $(MAPS)
+
+# TODO: do not hardcode PNG filenames in gentiles.sh
 gentiles:
-	for i in $$(seq 1 6); do \
-		mkdir -p map-201908/$$i ; \
-	        convert png/zoom-$$i.png \
-			-crop 256x256 \
-			-set tile '%[fx:page.x/256]_%[fx:page.y/256]' \
-			+repage +adjoin \
-			"map-201908/$$i/tile.png" ; \
-		for y in $$(seq 0 $$(( (2**i)-1 ))); do \
-			for x in $$(seq 0 $$(((2**i)-1 ))); do \
-				mkdir -p map-201908/$$i/$${x}; \
-				mv map-201908/$$i/tile-$$((x + y*(2**i) )).png map-201908/$$i/$$x/$$y.png || true; \
-			done; \
-		done; \
-	done
+	./gentiles.sh map-201908 $(ZOOM_MAX)
+
+# TODO: do not hardcode maximum zoom level and map-201908 directory name in index.html
