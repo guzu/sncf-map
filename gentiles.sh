@@ -1,23 +1,21 @@
-#!/bin/sh
+#!/bin/bash
 
 DIR=$1
 ZOOM_MAX=$2
 
 for i in $(seq 1 $ZOOM_MAX); do
+
+	echo "### Generating tiles for zoom level $i"
 	mkdir -p ${DIR}/$i
 
 	convert png/zoom-$i.png \
 		-crop 256x256 \
-		-set tile '%[fx:page.x/256]_%[fx:page.y/256]' \
+		-set filename:tile '%[fx:page.x/256]_%[fx:page.y/256]' \
 		+repage +adjoin \
-		"${DIR}/$i/tile.png" ; \
+		"${DIR}/$i/%[filename:tile].png"
 
-	# Fix convert, the filename should already be good with the use
-	# of %[tile].png and FX but it doesn't work, so do it manually
-	for y in $(seq 0 $(( (2**i)-1 ))); do
-		for x in $(seq 0 $(((2**i)-1 ))); do
-			mkdir -p ${DIR}/$i/${x}
-			mv ${DIR}/$i/tile-$((x + y*(2**i) )).png ${DIR}/$i/$x/$y.png || true
-		done
+	for png in $DIR/$i/*.png; do
+		mkdir -p ${png%%_*.png}
+		mv ${png} ${png/_/\/}
 	done
 done
