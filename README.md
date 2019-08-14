@@ -4,6 +4,12 @@ In this case this is useful to convert a big map in PDF of France railways that 
 barely browsable on a PC to a nice web version. <br>
 For the auhtor this is mostly useful to plan bicycle trips.
 
+Result can be seen on : http://guzu.net/sncf-map/
+
+# Dependencies
+Only rely on pdf2ppm from [Xpdf](https://www.xpdfreader.com) and [Imagemagick](https://imagemagick.org)
+
+
 # Hint
 Do not forget to comment every limits in /etc/ImageMagick/policy.xml to
 be able to work with the largest image
