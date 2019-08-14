@@ -1,18 +1,12 @@
 SHELL=bash
 
 ZOOM_MAX=6
-DIR=map-201908
 
-all: genmaps | gentiles
+all: map-201904
 
-png/zoom-%.png:
-	./genmap.sh $(subst png/zoom-,,$(subst .png,,$(@))) $(@)
+map-201904: PDF=pdf/MEP_POSTER_avril2019_POUR_LE_WEB.PDF
+map-201707: PDF=pdf/SNCF-Reseau_Carte-RFN-Pliee_juil2017_01.pdf
 
-MAPS=$(foreach var,$(shell seq 1 $(ZOOM_MAX)),png/zoom-$(var).png)
-genmaps: $(MAPS)
-
-# TODO: do not hardcode PNG filenames in gentiles.sh
-gentiles:
-	./gentiles.sh map-201908 $(ZOOM_MAX)
-
-# TODO: do not hardcode maximum zoom level and map-201908 directory name in index.html
+map-%:
+	sed "s/maxZoom: [0-9]*,/maxZoom: $(ZOOM_MAX),/; s/map-XXXXXX/map-$(*)/" index.html > index-$(*).html
+	./pdf2tilemap.sh --zoom $(ZOOM_MAX) --outdir map-$(*) --pdf-file $(PDF)
