@@ -1,6 +1,6 @@
 SHELL=bash
 
-ZOOM_MAX=6
+ZOOM_MAX=7
 
 all: map-201904
 

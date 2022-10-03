@@ -84,6 +84,8 @@ while [ $# -gt 0 ]; do
 done
 
 for i in $(seq 1 $ZOOM_MAX); do
-	genmap $i "${PDF_FILE}" png/full-zoom-$i.png
+	if [ ! -e png/full-zoom-$i.png ]; then
+		genmap $i "${PDF_FILE}" png/full-zoom-$i.png
+	fi
 	gentile $i png/full-zoom-$i.png
 done
