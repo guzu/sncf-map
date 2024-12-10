@@ -1,0 +1,45 @@
+#corner {
+  position:absolute;bottom:0px;right:0px;z-index:10000px;
+  font-family: Arial;
+  font-size: 10px;
+  border-color: #444;
+  text-align: right;
+  width: 60em;
+}
+
+p {
+    font-family: Arial;
+    font-size: 15px;
+    font-weight: bold;
+    color: #ffffff;
+
+    text-decoration: none;
+}
+
+a {
+    font-family: Arial;
+    font-size: 15px;
+    font-weight: bold;
+    color: #ffffff;
+
+    text-decoration: none;
+}
+
+#github-logo {
+    margin-right: 5px;
+}
+
+#navbar {
+    background-color: #000088;
+    font-family: Arial;
+    font-size: 15px;
+    font-weight: bold;
+    color: #ffffff;
+    padding-left: 3em;
+    padding-top: 3px;
+    padding-bottom: 3px;
+}
+
+.leaflet-container img {
+    image-rendering: optimizeSpeed;
+} /* thanks chrismorgan */

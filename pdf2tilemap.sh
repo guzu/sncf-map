@@ -1,11 +1,11 @@
 #!/bin/bash
-# Copyright 
 
 set -e
 
 ZOOM_MAX=6  # default to 6
-PDF_FILE=pdf/latest
-TILE_DIR=maptiles
+#PDF_FILE=pdf/latest
+
+STATIC=static
 TILE_SIZE=256
 
 genmap() {
@@ -50,9 +50,9 @@ gentile() {
 		-crop ${TILE_SIZE}x${TILE_SIZE} \
 		-set filename:tile "%[fx:page.x/${TILE_SIZE}]_%[fx:page.y/${TILE_SIZE}]" \
 		+repage +adjoin \
-		"${TILE_DIR}/$i/%[filename:tile].png"
+		"${TILE_DIR}/${zoom}/%[filename:tile].png"
 
-	for png in $TILE_DIR/$i/*.png; do
+	for png in ${TILE_DIR}/${i}/*.png; do
 		mkdir -p ${png%%_*.png}
 		mv ${png} ${png/_/\/}
 	done
@@ -61,31 +61,60 @@ gentile() {
 
 while [ $# -gt 0 ]; do
 	case "$1" in
-	  --pdf-file)
-	      PDF_FILE=$2
-	      shift 2
-              ;;
-          --outdir)
-	      TILE_DIR=$2
-	      shift 2
-              ;;
-          --zoom)
-	      ZOOM_MAX=$2
-	      shift 2
-              ;;
-          --*)
-              echo "ERROR: unknown option ${opt}"
-              exit 1
-	      ;;
-	  *)
-	      break
-	      ;;
-          esac
+	--pdf)
+	    PDF_FILE=$2
+	    shift 2
+        ;;
+	--year)
+		YEAR=$2
+		shift 2
+		;;
+    --outdir)
+	    TILE_DIR=$2
+	    shift 2
+        ;;
+    --zoom)
+	    ZOOM_MAX=$2
+	    shift 2
+        ;;
+    --*)
+        echo "ERROR: unknown option ${opt}"
+        exit 1
+	    ;;
+	--help)
+		echo "USAGE: $0 --pdf PDF --year YEAR [--zoom ZOOM-LEVEL]"
+		;;
+	*)
+		break
+		;;
+    esac
 done
 
+
+if [ -z "$PDF_FILE" ]; then
+	echo "ERROR: a PDF file must be provided"
+	exit 1
+fi
+if [ -z "$YEAR" ]; then
+	echo "ERROR: a YEAR must be provided"
+	exit 1
+fi
+
+TILE_DIR=${STATIC}/map-${YEAR}
+
+mkdir -p ${STATIC}
+mkdir -p maps
+echo "### Generating website..."
+
 for i in $(seq 1 $ZOOM_MAX); do
-	if [ ! -e png/full-zoom-$i.png ]; then
-		genmap $i "${PDF_FILE}" png/full-zoom-$i.png
+	if [ ! -e maps/full-zoom-$i.png ]; then
+		genmap $i "${PDF_FILE}" maps/full-zoom-$i.png
 	fi
-	gentile $i png/full-zoom-$i.png
+	gentile $i maps/full-zoom-$i.png
 done
+
+# Copy other 
+sed "s,map-XXXXXX,$(basename ${TILE_DIR}), ; s/YEAR/${YEAR}/ ; s/MAX_ZOOM/${ZOOM_MAX}/" index.html > ${STATIC}/index.html
+cp -a styles.css leaflet* img ${STATIC}/
+
+echo "You can now copy 'static' directory"
